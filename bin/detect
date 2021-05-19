@@ -1,4 +1,9 @@
-#!/usr/bin/env bash
-# bin/detect <build-dir>
+#!/bin/sh
 
-echo "SquareOne buildpack complete!" && exit 0
+# this pack is valid for apps with a hello.txt in the root
+if [ -f $1/squareone.yml ]; then
+  echo "SquareOne"
+  exit 0
+else
+  exit 1
+fi

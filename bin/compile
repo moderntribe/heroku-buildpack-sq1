@@ -4,15 +4,13 @@ set -e            # fail fast
 set -o pipefail   # don't ignore exit codes when piping output
 # set -x          # enable debugging
 
+echo "-----> Found a squareone.yaml"
+
 # Configure directories
 BUILD_DIR=$1
 VENDOR_DIR="vendor"
 
 cd $BUILD_DIR
-
-# install curl
-apt-get update
-apt-get -y install curl
 
 # Install WP CLI
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
