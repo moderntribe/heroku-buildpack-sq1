@@ -14,8 +14,9 @@ cd $BUILD_DIR
 # Install WP CLI
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 chmod +x wp-cli.phar
-mv wp-cli.phar /usr/local/bin/wp
-export PATH="/usr/local/bin/:$PATH"
+mkdir /app/.heroku/wp/bin
+mv wp-cli.phar /app/.heroku/wp/bin/wp
+export PATH="/app/.heroku/wp/bin/:$PATH"
 
 # Export PHP path to bin
 export PATH="/app/.heroku/php/bin:$PATH"
