@@ -20,3 +20,4 @@ export PATH="/app/.heroku/wp/bin/:$PATH"
 
 # Export PHP path to bin
 export PATH="/app/.heroku/php/bin:$PATH"
+
