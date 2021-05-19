@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -e            # fail fast
+set -o pipefail   # don't ignore exit codes when piping output
+# set -x          # enable debugging
+
+# Configure directories
+BUILD_DIR=$1
+VENDOR_DIR="vendor"
+
+cd $BUILD_DIR
+
+# install curl
+apt-get update
+apt-get -y install curl
+
+# Install WP CLI
+curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+chmod +x wp-cli.phar
+mv wp-cli.phar /usr/local/bin/wp
+export PATH="/usr/local/bin/:$PATH"
+
+# Export PHP path to bin
+export PATH="/app/.heroku/php/bin:$PATH"
