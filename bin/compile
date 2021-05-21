@@ -17,8 +17,5 @@ curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.pha
 chmod +x wp-cli.phar
 mkdir -p $BUILD_DIR/.heroku/wp/bin/
 mv wp-cli.phar $BUILD_DIR/.heroku/wp/bin/wp
-export PATH="/app/.heroku/wp/bin:$PATH"
 
-echo "-----> Export PHP binary to PATH"
-export PATH="/app/.heroku/php/bin:$PATH"
 
