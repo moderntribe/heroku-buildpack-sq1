@@ -19,3 +19,7 @@ mkdir -p $BUILD_DIR/.heroku/wp/bin/
 mv wp-cli.phar $BUILD_DIR/.heroku/wp/bin/wp
 
 
+echo "-----> Setup Binary path"
+mkdir -p "$BUILD_DIR"/.profile.d
+echo export PATH="/app/.heroku/wp/bin:$PATH" > "$BUILD_DIR"/.profile.d/wp-cli.sh
+EOF

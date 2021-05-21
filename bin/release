@@ -4,6 +4,4 @@ cat << EOF
 --
 addons: []
 default_process_types: {}
-config_vars:
-  PATH: /app/.heroku/wp/bin:$PATH
 EOF
