@@ -26,8 +26,8 @@ EOF
 
 if [[ ! -f "Procfile" ]]; then
     echo "-----> Creating Procfile"
-	echo "web: vendor/bin/heroku-php-nginx -F .sq1/config/fpm.conf -C .sq1/config/nginx.conf -i .sq1/config/php.ini wp/" > Procfile
-	echo "release: wp --allow-root --info" >> Procfile
+    echo "web: vendor/bin/heroku-php-nginx -F .sq1/config/fpm.conf -C .sq1/config/nginx.conf -i .sq1/config/php.ini wp/" > Procfile
+    echo "release: wp --allow-root --info" >> Procfile
 
     mkdir -p "$BUILD_DIR/.sq1/config"
 
