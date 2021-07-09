@@ -5,6 +5,6 @@ if [ -f $1/squareone.yml ]; then
   echo "SquareOne!"
   exit 0
 else
-  echo "Not SquareOne but all systems can go :)"
+  echo "Not SquareOne!"
   exit 0
 fi
