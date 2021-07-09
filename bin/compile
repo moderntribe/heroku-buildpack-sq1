@@ -8,15 +8,16 @@ echo "-----> Buildpack Squareone"
 
 # Configure directories
 BUILD_DIR=$1
+CACHE_DIR="$2"
 
-cd $BUILD_DIR
+# cd $BUILD_DIR
 echo "Build Directory: $BUILD_DIR"
 
 echo "-----> Install WP-CLI"
-curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-chmod +x wp-cli.phar
+curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o $CACHE_DIR/wp-cli.phar
+chmod +x $CACHE_DIR/wp-cli.phar
 mkdir -p $BUILD_DIR/.heroku/wp/bin/
-mv wp-cli.phar $BUILD_DIR/.heroku/wp/bin/wp
+mv $CACHE_DIR/wp-cli.phar $BUILD_DIR/.heroku/wp/bin/wp
 "$BUILD_DIR/.heroku/wp/bin/wp" --info
 
 
@@ -26,6 +27,15 @@ cat <<EOF > "$BUILD_DIR"/.profile.d/200-wpcli.sh
 export PATH="$HOME/.heroku/wp/bin:$PATH"
 EOF
 
+echo "-----> DEBUG: Listing files"
+pwd
+ls -la
+
+
+echo "-----> DEBUG: Listing files"
+cd $BUILD_DIR
+pwd
+ls -la
 
 if [[ ! -f "$BUILD_DIR/Procfile" ]]; then
     echo "-----> Creating Procfile"
