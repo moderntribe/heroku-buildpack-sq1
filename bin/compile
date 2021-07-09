@@ -8,18 +8,15 @@ echo "-----> Buildpack Squareone"
 
 # Configure directories
 BUILD_DIR=$1
-CACHE_DIR="$2"
 
-# cd $BUILD_DIR
+cd $BUILD_DIR
 echo "Build Directory: $BUILD_DIR"
 
 echo "-----> Install WP-CLI"
-curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o $CACHE_DIR/wp-cli.phar
-chmod +x $CACHE_DIR/wp-cli.phar
+curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+chmod +x wp-cli.phar
 mkdir -p $BUILD_DIR/.heroku/wp/bin/
-mv $CACHE_DIR/wp-cli.phar $BUILD_DIR/.heroku/wp/bin/wp
-"$BUILD_DIR/.heroku/wp/bin/wp" --info
-
+mv wp-cli.phar $BUILD_DIR/.heroku/wp/bin/wp
 
 echo "-----> Setup Binary path"
 mkdir -p "$BUILD_DIR"/.profile.d
@@ -27,17 +24,8 @@ cat <<EOF > "$BUILD_DIR"/.profile.d/200-wpcli.sh
 export PATH="$HOME/.heroku/wp/bin:$PATH"
 EOF
 
-echo "-----> DEBUG: Listing files"
-pwd
-ls -la
 
-
-echo "-----> DEBUG: Listing files"
-cd $BUILD_DIR
-pwd
-ls -la
-
-if [[ ! -f "$BUILD_DIR/Procfile" ]]; then
+if [[ ! -f "Procfile" ]]; then
     echo "-----> Creating Procfile"
 	echo "web: vendor/bin/heroku-php-nginx -F .sq1/config/fpm.conf -C .sq1/config/nginx.conf -i .sq1/config/php.ini wp/" > Procfile
 
@@ -53,5 +41,4 @@ if [[ ! -f "$BUILD_DIR/Procfile" ]]; then
     cp "$BUILD_DIR/config/php.ini" "$BUILD_DIR/.sq1/config/php.ini"
 else
     echo "-----> Procfile found! Skipping copying configuration files."
-    cat "$BUILD_DIR/Procfile"
 fi
