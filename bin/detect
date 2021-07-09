@@ -2,8 +2,9 @@
 
 # this pack is valid for apps with a hello.txt in the root
 if [ -f $1/squareone.yml ]; then
-  echo "SquareOne"
+  echo "SquareOne!"
   exit 0
 else
-  exit 1
+  echo "Not SquareOne but all systems can go :)"
+  exit 0
 fi

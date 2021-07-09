@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-set -e            # fail fast
+set -eu            # fail fast
 set -o pipefail   # don't ignore exit codes when piping output
 # set -x          # enable debugging
 
-echo "-----> Found a squareone.yaml"
+echo "-----> Buildpack Squareone"
 
 # Configure directories
 BUILD_DIR=$1
@@ -17,6 +17,7 @@ curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.pha
 chmod +x wp-cli.phar
 mkdir -p $BUILD_DIR/.heroku/wp/bin/
 mv wp-cli.phar $BUILD_DIR/.heroku/wp/bin/wp
+"$BUILD_DIR/.heroku/wp/bin/wp" --info
 
 
 echo "-----> Setup Binary path"
@@ -24,3 +25,20 @@ mkdir -p "$BUILD_DIR"/.profile.d
 cat <<EOF > "$BUILD_DIR"/.profile.d/200-wpcli.sh
 export PATH="$HOME/.heroku/wp/bin:$PATH"
 EOF
+
+
+if [[ ! -f "Procfile" ]]; then
+    echo "-----> Creating Procfile"
+	echo "web: vendor/bin/heroku-php-nginx -F .sq1/config/fpm.conf -C .sq1/config/nginx.conf -i .sq1/config/php.ini wp/" > Procfile
+
+    mkdir -p "$BUILD_DIR/.sq1/config"
+
+    echo "-----> Copying Nginx configuration"
+    cp "$BUILD_DIR/config/nginx.conf" "$BUILD_DIR/.sq1/config/nginx.conf"
+
+    echo "-----> Copying PHP-FPM configuration"
+    cp "$BUILD_DIR/config/fpm.conf" "$BUILD_DIR/.sq1/config/fpm.conf"
+
+    echo "-----> Copying php.ini configuration"
+    cp "$BUILD_DIR/config/php.ini" "$BUILD_DIR/.sq1/config/php.ini"
+fi
