@@ -42,5 +42,6 @@ if [[ ! -f "$BUILD_DIR/Procfile" ]]; then
     echo "-----> Copying php.ini configuration"
     cp "$BUILD_DIR/config/php.ini" "$BUILD_DIR/.sq1/config/php.ini"
 else
-    echo "-----> Procfile skipping copying configuration files."
+    echo "-----> Procfile found! Skipping copying configuration files."
+    cat "$BUILD_DIR/Procfile"
 fi
