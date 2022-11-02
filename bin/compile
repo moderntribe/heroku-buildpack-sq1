@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir> <env-dir>
 
 set -eu           # fail fast
 set -o pipefail   # don't ignore exit codes when piping output
@@ -7,31 +8,54 @@ set -o pipefail   # don't ignore exit codes when piping output
 echo "-----> Buildpack Squareone"
 
 # Configure directories
-BUILD_DIR=$1
-CACHE_DIR=$2
-ENV_DIR=$3
+BUILDPACK_DIR=$(cd "$(dirname "${0:-}")"/..; pwd) # absolute path
+BUILD_DIR="${1:-}"
+CACHE_DIR="${2:-}"
+ENV_DIR="${3:-}"
+
+function setup_profile() {
+    echo "-----> Setup Binary path"
+    mkdir -p "${BUILD_DIR}/.profile.d"
+}
+
+setup_profile
 
 function install_wp_cli() {
     cd "${BUILD_DIR}"
     echo "Build Directory: ${BUILD_DIR}"
 
-    echo "-----> Install WP-CLI"
     mkdir -p "${BUILD_DIR}/.heroku/wp/bin/"
-    curl -s https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o "${BUILD_DIR}/.heroku/wp/bin/wp"
+
+    echo "-----> Install WP-CLI"
+    curl --retry 2 --silent --max-time 60 --location https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o "${CACHE_DIR}/.heroku/wp/bin/wp"
     chmod +x "$BUILD_DIR/.heroku/wp/bin/wp"
     "$BUILD_DIR/.heroku/wp/bin/wp" --info
 
-    # linking to old path for backward compatibility
+    echo 'export PATH=$PATH:$HOME/.heroku/wp/bin' > "${BUILD_DIR}/.profile.d/wpcli.sh"
+
+    # also copy to old path for backward compatibility
     mkdir -p "${BUILD_DIR}/.wpcli"
     cp "$BUILD_DIR/.heroku/wp/bin/wp" "${BUILD_DIR}/.wpcli/wp"
-
-    echo "-----> Setup Binary path"
-    mkdir -p "${BUILD_DIR}/.profile.d"
-
-cat <<EOF > "${BUILD_DIR}/.profile.d/200-wpcli.sh"
-export PATH="$HOME/.heroku/wp/bin:$PATH"
-EOF
-
 }
 
 install_wp_cli
+
+function install_vim() {
+
+    VIM_FILENAME='vim-static.tar.gz'
+    AMZ_VIM_URL="https://s3.amazonaws.com/bengoa/$VIM_FILENAME"
+
+    mkdir -p "${BUILD_DIR}/.heroku/vim/bin/"
+
+    echo "-----> Downloading VIM... (${AMZ_VIM_URL})"
+    curl --retry 2 --silent --max-time 60 --location "${AMZ_VIM_URL}" --output "${CACHE_DIR}/${VIM_FILENAME}"
+
+    echo "Installing VIM..."
+    tar -xf "${CACHE_DIR}/${VIM_FILENAME}" -C "${BUILD_DIR}/.heroku/vim/bin/"
+
+    echo 'export PATH=$PATH:/app/vim' >> "$BUILD_DIR/.profile.d/vim.sh"
+}
+
+install_vim
+
+echo "----->    DONE"
