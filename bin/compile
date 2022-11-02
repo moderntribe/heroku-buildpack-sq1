@@ -57,4 +57,19 @@ function install_vim() {
 
 install_vim
 
+# Aptfile
+cat <<-EOF > "$BUILD_DIR/Aptfile"
+msmtp
+EOF
+
+# msmtp configuration
+cat <<-EOF > "$BUILD_DIR/.msmtprc"
+account mailhog
+host ${MAIL_HOST}
+port 1025
+from squareone@tribe
+
+account default : mailhog
+EOF
+
 echo "----->    DONE"
