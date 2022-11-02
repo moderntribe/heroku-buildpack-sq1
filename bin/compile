@@ -17,13 +17,13 @@ function install_wp_cli() {
 
     echo "-----> Install WP-CLI"
     mkdir -p "${BUILD_DIR}/.heroku/wp/bin/"
-    curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o "${BUILD_DIR}/.heroku/wp/bin/wp"
+    curl -s https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o "${BUILD_DIR}/.heroku/wp/bin/wp"
     chmod +x "$BUILD_DIR/.heroku/wp/bin/wp"
     "$BUILD_DIR/.heroku/wp/bin/wp" --info
 
     # linking to old path for backward compatibility
     mkdir -p "${BUILD_DIR}/.wpcli"
-    ln -sf "$BUILD_DIR/.heroku/wp/bin/wp" "${BUILD_DIR}/.wpcli/wp"
+    cp "$BUILD_DIR/.heroku/wp/bin/wp" "${BUILD_DIR}/.wpcli/wp"
 
     echo "-----> Setup Binary path"
     mkdir -p "${BUILD_DIR}/.profile.d"
