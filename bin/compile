@@ -39,30 +39,13 @@ function install_wp_cli() {
 
 install_wp_cli
 
-function install_vim() {
-
-    VIM_FILENAME='vim-static.tar.gz'
-    AMZ_VIM_URL="https://s3.amazonaws.com/bengoa/$VIM_FILENAME"
-
-    mkdir -p "${BUILD_DIR}/.heroku/vim/bin/"
-
-    echo "-----> Downloading VIM... (${AMZ_VIM_URL})"
-    curl --retry 2 --silent --max-time 60 --location "${AMZ_VIM_URL}" --output "${CACHE_DIR}/${VIM_FILENAME}"
-
-    echo "Installing VIM..."
-    tar -xf "${CACHE_DIR}/${VIM_FILENAME}" -C "${BUILD_DIR}/.heroku/vim/bin/"
-
-    echo 'export PATH=$PATH:/app/vim' >> "$BUILD_DIR/.profile.d/vim.sh"
-}
-
-install_vim
-
-# Aptfile
+echo "-----> Writing Aptfile..."
 cat <<-EOF > "$BUILD_DIR/Aptfile"
+vim
 msmtp
 EOF
 
-# msmtp configuration
+echo "-----> Writing  msmtp configuration..."
 cat <<-EOF > "$BUILD_DIR/.msmtprc"
 account mailhog
 host ${MAIL_HOST}
@@ -72,4 +55,6 @@ from squareone@tribe
 account default : mailhog
 EOF
 
+echo "----->"
+echo "----->"
 echo "----->    DONE"
