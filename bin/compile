@@ -65,7 +65,7 @@ EOF
 echo "-----> Writing  msmtp configuration..."
 cat <<-EOF > "$BUILD_DIR/.msmtprc"
 account mailhog
-host ${MAIL_HOST}
+host ${SMTP_HOST}
 port 1025
 from squareone@tribe
 
