@@ -60,7 +60,6 @@ install_vim
 function remove_auth_json() {
     echo "-----> Remove auth.json"
     rm -f "${BUILD_DIR}/auth.json"
-    ls -la
 }
 
 remove_auth_json
