@@ -20,25 +20,6 @@ function setup_profile() {
 
 setup_profile
 
-function install_wp_cli() {
-    cd "${BUILD_DIR}"
-    echo "Build Directory: ${BUILD_DIR}"
-    mkdir -p "${BUILD_DIR}/.heroku/wp/bin/"
-
-    echo "-----> Install WP-CLI"
-    curl --retry 2 --silent --max-time 60 --location https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o "${BUILD_DIR}/.heroku/wp/bin/wp"
-    chmod +x "$BUILD_DIR/.heroku/wp/bin/wp"
-    "$BUILD_DIR/.heroku/wp/bin/wp" --info
-
-    echo 'export PATH=$PATH:$HOME/.heroku/wp/bin' > "${BUILD_DIR}/.profile.d/wpcli.sh"
-
-    # also copy to old path for backward compatibility
-    mkdir -p "${BUILD_DIR}/.wpcli"
-    cp "$BUILD_DIR/.heroku/wp/bin/wp" "${BUILD_DIR}/.wpcli/wp"
-}
-
-install_wp_cli
-
 function install_vim() {
 
     VIM_FILENAME='vim-static.tar.gz'
